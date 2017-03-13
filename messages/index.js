@@ -137,12 +137,13 @@ bot.dialog('/create-subscription', [
             'Oui', 'Non'
         ]);
     },
-    (session, args) => {
+    (session, args, next) => {
         if (args.response.entity === 'Oui') {
             session.beginDialog('pre-season-test');
         }
         else {
             session.send('Ok. En quoi puis-je vous aider ?');
+            next();
         }
     }
 ]);
