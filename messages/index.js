@@ -35,11 +35,9 @@ var intents = new builder.IntentDialog({recognizers: [recognizer]})
  */
     .matches('what-is-concussion', (session, args) => {
         session.send(infos.whatIsConcussion);
-    })
-    .matches('when-can-have-concussion', (session, args) => {
+    }).matches('when-can-have-concussion', (session, args) => {
         session.send(infos.whenCanHaveConcussion);
-    })
-    .matches('what-evidence-on-concussion', (session, args) => {
+    }).matches('what-evidence-on-concussion', (session, args) => {
         session.send(infos.whatEvidenceOnConcussionIntro);
         session.sendTyping();
         setTimeout(() => {
@@ -60,18 +58,12 @@ var intents = new builder.IntentDialog({recognizers: [recognizer]})
         session.send(infos.whyDeclareConcusssion);
     }).matches('how-restart-activity', (session, args) => {
         session.send(infos.howRestartActivity);
-    })
-    .matches('do-pre-season-test', [(session, args) => {
-        session.send(infos.testPreSeason);
-        session.beginDialog('/orientation-questions');
-    }, (session, results) => {
-        session.send(JSON.stringify(results.response));
-    }])
-    .matches('help', (session, args) => {
+    }).matches('do-pre-season-test', (session, args) => {
+        session.beginDialog('pre-season-test');
+    }).matches('help', (session, args) => {
         session.send('Appelez Mathieu');
-    })
-    .onDefault((session) => {
-        session.send('Sorry, I did not understand \'%s\'.', session.message.text);
+    }).onDefault((session) => {
+        session.send('Désole, Je ne comprends pas \'%s\'.', session.message.text);
     });
 
 //=========================================================
@@ -83,14 +75,22 @@ bot.on('contactRelationUpdate', function (message) {
         var name = message.user ? message.user.name : null;
         var reply = new builder.Message()
             .address(message.address)
-            .text("Bonjour %s, je suis Cortex. Que puis-je faire pour vous ?", name || 'à vous');
+            .text("Bonjour %s, je suis Cortex, votre assistant qui va suivre votre statut cognitif.", name || 'à vous');
         bot.send(reply);
+        bot.beginDialog(message.address, '/create-subscription', {userId: message.user.id});
     }
 });
 
 //=========================================================
 // Bots Dialogs
 //=========================================================
+
+bot.dialog('pre-season-test', [(session, args) => {
+    session.send(infos.testPreSeason);
+    session.beginDialog('/orientation-questions');
+}, (session, results) => {
+    session.send(JSON.stringify(results.response));
+}]);
 
 var questions = [
     {field: 'month', prompt: "Quel mois sommes nous ?", type: "string"},
@@ -131,6 +131,21 @@ bot.dialog('/orientation-questions', [
     }
 ]);
 
+bot.dialog('/create-subscription', [
+    (session, args) => {
+        builder.Prompts.choice(session, "Pour commencer, voulez-vous réaliser un test d'évaluation de pré-saison", [
+            'Oui', 'Non'
+        ]);
+    },
+    (session, args) => {
+        if (args.response.entity === 'Oui') {
+            session.beginDialog('pre-season-test');
+        }
+        else {
+            session.send('Ok. En quoi puis-je vous aider ?');
+        }
+    }
+]);
 
 bot.dialog('/', intents);
 
