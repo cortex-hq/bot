@@ -54,6 +54,8 @@ module.exports = {
     "n’apparaisse au fur et à mesure que l’on intensifie l’activité. Le retour au jeu, décidé par le médecin spécialiste référent, " +
     "n’est envisageable que lorsque le joueur est arrivé au palier se situant juste avant la reprise du jeu au contact. Il existe des " +
     "règles de retour au jeu comportant des délais variables en fonction de la sévérité de la commotion cérébrale, de l’âge du joueur, " +
-    "de la notion de commotions cérébrales antérieures et bien sûr de facteurs propres à chaque individu."
-
+    "de la notion de commotions cérébrales antérieures et bien sûr de facteurs propres à chaque individu.",
+    testPreSeason: "Le but de cette évaluation est double :\n\n" +
+    "- Elle servira de bilan de référence en cas de survenue d’une commotion cérébrale au cours de la saison (évaluationneuropsychologique avant la reprise\n\n" +
+    "- Elle permettra également de suivre le statut cognitif des joueurs au fil des saisons afin de mettre en évidence unéventuel déclin cognitif qui pourra être corrélé aux nombres cumulé des commotions cérébrales."
 };

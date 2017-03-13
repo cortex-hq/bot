@@ -62,6 +62,7 @@ var intents = new builder.IntentDialog({recognizers: [recognizer]})
         session.send(infos.howRestartActivity);
     })
     .matches('do-pre-season-test', [(session, args) => {
+        session.send(infos.testPreSeason);
         session.beginDialog('/orientation-questions');
     }, (session, results) => {
         session.send(JSON.stringify(results.response));
@@ -73,6 +74,23 @@ var intents = new builder.IntentDialog({recognizers: [recognizer]})
         session.send('Sorry, I did not understand \'%s\'.', session.message.text);
     });
 
+//=========================================================
+// Activity Events
+//=========================================================
+
+bot.on('contactRelationUpdate', function (message) {
+    if (message.action === 'add') {
+        var name = message.user ? message.user.name : null;
+        var reply = new builder.Message()
+            .address(message.address)
+            .text("Bonjour %s, je suis Cortex. Que puis-je faire pour vous ?", name || 'à vous');
+        bot.send(reply);
+    }
+});
+
+//=========================================================
+// Bots Dialogs
+//=========================================================
 
 var questions = [
     {field: 'month', prompt: "Quel mois sommes nous ?", type: "string"},
